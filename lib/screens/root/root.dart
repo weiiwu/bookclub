@@ -26,7 +26,8 @@ class _OurRootState extends State<OurRoot> {
     String _returnString = await _currentUser.onStartUp();
     if (_returnString == "success") {
       setState(() {
-        _authStatus = AuthStatus.loggedIn;
+        _authStatus = AuthStatus.notLoggedIn;
+        // _authStatus = AuthStatus.loggedIn;
       });
     }
   }
