@@ -1,3 +1,5 @@
+import 'package:bookclub/models/book.dart';
+import 'package:bookclub/models/group.dart';
 import 'package:bookclub/models/user.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
@@ -78,6 +80,47 @@ class OurDatabase {
       });
 
       retVal = "success";
+    } catch (e) {
+      print(e);
+    }
+
+    return retVal;
+  }
+
+  Future<OurGroup> getGroupInfo(String groupId) async {
+    OurGroup retVal = OurGroup();
+
+    try {
+      DocumentSnapshot _docSnapshot =
+          await _firestore.collection("groups").document(groupId).get();
+      retVal.id = groupId;
+      retVal.name = _docSnapshot.data["name"];
+      retVal.leader = _docSnapshot.data["leader"];
+      retVal.members = List<String>.from(_docSnapshot.data["members"]);
+      retVal.groupCreated = _docSnapshot.data['groupCreated'];
+      retVal.currentBookId = _docSnapshot.data['currentBookId'];
+      retVal.currentBookDue = _docSnapshot.data['currentBookDue'];
+    } catch (e) {
+      print(e);
+    }
+
+    return retVal;
+  }
+
+  Future<OurBook> getCurrentBook(String groupId, String bookId) async {
+    OurBook retVal = OurBook();
+
+    try {
+      DocumentSnapshot _docSnapshot = await _firestore
+          .collection("groups")
+          .document(groupId)
+          .collection("books")
+          .document(bookId)
+          .get();
+      retVal.id = bookId;
+      retVal.name = _docSnapshot.data["name"];
+      retVal.length = _docSnapshot.data["length"];
+      retVal.dateCompleted = _docSnapshot.data["dateCompleted"];
     } catch (e) {
       print(e);
     }
